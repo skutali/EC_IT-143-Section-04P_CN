@@ -1,0 +1,122 @@
+ 
+
+-- Question 1: (Original author: Student A)  
+-- What are our top five selling products by total sales amount?  
+
+SELECT TOP 5   
+    p.Name AS ProductName,   
+    SUM(sod.LineTotal) AS TotalSalesAmount   
+FROM   
+    dbo.SalesOrderDetail AS sod  
+    JOIN dbo.Product AS p ON sod.ProductID = p.ProductID  
+GROUP BY   
+    p.Name  
+ORDER BY   
+    TotalSalesAmount DESC;  
+
+-- Question 2: (Original author: Student B)  
+-- Which employee has the highest sales figures in 2023?  
+
+SELECT TOP 1   
+    e.FirstName,   
+    e.LastName,   
+    SUM(sod.LineTotal) AS TotalSales   
+FROM   
+    dbo.SalesOrderDetail AS sod  
+    JOIN dbo.SalesOrder AS so ON sod.SalesOrderID = so.SalesOrderID  
+    JOIN dbo.Employee AS e ON so.EmployeeID = e.EmployeeID  
+WHERE   
+    YEAR(so.OrderDate) = 2023  
+GROUP BY   
+    e.FirstName, e.LastName  
+ORDER BY   
+    TotalSales DESC;  
+
+-- Question 3: (Original author: Student C)  
+-- I am interested in the average list price of road bikes. Can you show the average per frame size for the road bikes in our inventory?  
+
+SELECT   
+    p.FrameSize,   
+    AVG(p.ListPrice) AS AverageListPrice   
+FROM   
+    dbo.Product AS p  
+    JOIN dbo.ProductCategory AS pc ON p.ProductCategoryID = pc.ProductCategoryID  
+WHERE   
+    pc.Name = 'Bikes' AND p.Style = 'Road'  
+GROUP BY   
+    p.FrameSize;  
+
+-- Question 4: (Original author: Student D)  
+-- Can you provide a comparison of sales for our mountain bikes versus road bikes in terms of the total quantity sold in 2022?  
+
+SELECT   
+    pc.Name AS BikeType,   
+    SUM(sod.OrderQty) AS TotalQuantitySold   
+FROM   
+    dbo.SalesOrderDetail AS sod  
+    JOIN dbo.SalesOrder AS so ON sod.SalesOrderID = so.SalesOrderID  
+    JOIN dbo.Product AS p ON sod.ProductID = p.ProductID  
+    JOIN dbo.ProductCategory AS pc ON p.ProductCategoryID = pc.ProductCategoryID  
+WHERE   
+    YEAR(so.OrderDate) = 2022 AND   
+    (pc.Name = 'Mountain Bikes' OR pc.Name = 'Road Bikes')  
+GROUP BY   
+    pc.Name;  
+
+-- Question 5: (Original author: Student E)  
+-- I'm analyzing customer preferences in the last year. Specifically, I would like to know how the sales of bicycles varied by color and gender of the buyer. Can you produce a breakdown of sales for each color by gender for 2023?  
+
+SELECT   
+    p.Color,   
+    c.Gender,   
+    SUM(sod.LineTotal) AS TotalSales   
+FROM   
+    dbo.SalesOrderDetail AS sod  
+    JOIN dbo.SalesOrder AS so ON sod.SalesOrderID = so.SalesOrderID  
+    JOIN dbo.Product AS p ON sod.ProductID = p.ProductID  
+    JOIN dbo.Customer AS c ON so.CustomerID = c.CustomerID  
+WHERE   
+    YEAR(so.OrderDate) = 2023  
+GROUP BY   
+    p.Color, c.Gender  
+ORDER BY   
+    p.Color, c.Gender;  
+
+-- Question 6: (Original author: Student F)  
+-- I need insights into the performance of our different product lines. Please create a report comparing the total sales figures for our bicycles and accessories from Q1 through Q3 of 2023, highlighting any trends and significant variances.  
+
+SELECT   
+    pc.Name AS ProductLine,   
+    SUM(sod.LineTotal) AS TotalSales   
+FROM   
+    dbo.SalesOrderDetail AS sod  
+    JOIN dbo.SalesOrder AS so ON sod.SalesOrderID = so.SalesOrderID  
+    JOIN dbo.Product AS p ON sod.ProductID = p.ProductID  
+    JOIN dbo.ProductCategory AS pc ON p.ProductCategoryID = pc.ProductCategoryID  
+WHERE   
+    so.OrderDate >= '2023-01-01' AND   
+    so.OrderDate < '2023-10-01' -- Up to Q3 of 2023  
+GROUP BY   
+    pc.Name  
+ORDER BY   
+    TotalSales DESC;  
+
+-- Question 7: (Original author: Student G)  
+-- Can you provide a list of all tables in AdventureWorks that contain an 'OrderDate' column?  
+
+SELECT   
+    TABLE_NAME   
+FROM   
+    INFORMATION_SCHEMA.COLUMNS   
+WHERE   
+    COLUMN_NAME = 'OrderDate';  
+
+-- Question 8: (Original author: Student H)  
+-- What are the names of all views in the AdventureWorks database that provide sales statistics?  
+
+SELECT   
+    TABLE_NAME AS ViewName   
+FROM   
+    INFORMATION_SCHEMA.VIEWS   
+WHERE   
+    TABLE_NAME LIKE '%Sales%';
