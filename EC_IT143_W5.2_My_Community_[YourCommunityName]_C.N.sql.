@@ -1,0 +1,29 @@
+-- My Communities Data Set 1: C.N 
+-- Author: COLLINS NOT  
+-- Date: 18/10/2024 
+
+-- Question 1 (Authored by Student A): What are the total sales for each product category?  
+-- SQL Statement  
+SELECT category, SUM(sales) AS total_sales   
+FROM sales_data   
+GROUP BY category;  
+
+-- Question 2 (Authored by Your Question): What is the average customer rating for products?  
+-- SQL Statement  
+SELECT product_id, AVG(rating) AS average_rating   
+FROM product_reviews   
+GROUP BY product_id;  
+
+-- Question 3 (Authored by Student B): How many new customers registered in the last month?  
+-- SQL Statement  
+SELECT COUNT(*) AS new_customers   
+FROM customers   
+WHERE registration_date >= CURDATE() - INTERVAL 1 MONTH;  
+
+-- Question 4 (Authored by Your Question): What are the top 5 products by sales?  
+-- SQL Statement  
+SELECT product_id, SUM(sales) AS total_sales   
+FROM sales_data   
+GROUP BY product_id   
+ORDER BY total_sales DESC   
+LIMIT 5;
